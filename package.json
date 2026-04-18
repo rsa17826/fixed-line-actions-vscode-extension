@@ -2,7 +2,7 @@
   "name": "better-end-line-actions",
   "displayName": "better end line actions",
   "description": "",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -34,6 +34,14 @@
       {
         "command": "lineFix.moveLinesDown",
         "title": "Move Lines Down (Fixed)"
+      },
+      {
+        "command": "lineFix.outdentLines",
+        "title": "Outdent Lines (Fixed)"
+      },
+      {
+        "command": "lineFix.indentLines",
+        "title": "Indent Lines (Fixed)"
       }
     ]
   },
@@ -46,13 +54,13 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.56.1",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.3",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.56.1"
   }
 }

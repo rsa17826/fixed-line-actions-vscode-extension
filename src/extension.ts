@@ -7,6 +7,8 @@ function activate(context: vscode.ExtensionContext) {
     ["lineFix.copyLinesDown", "editor.action.copyLinesDownAction"],
     ["lineFix.moveLinesUp", "editor.action.moveLinesUpAction"],
     ["lineFix.moveLinesDown", "editor.action.moveLinesDownAction"],
+    ["lineFix.indentLines", "editor.action.indentLines"],
+    ["lineFix.outdentLines", "editor.action.outdentLines"],
   ]
 
   for (const [cmd, action] of commands) {
