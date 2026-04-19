@@ -42,6 +42,10 @@
       {
         "command": "lineFix.indentLines",
         "title": "Indent Lines (Fixed)"
+      },
+      {
+        "command": "lineFix.commentLine",
+        "title": "Comment Lines (Fixed)"
       }
     ]
   },

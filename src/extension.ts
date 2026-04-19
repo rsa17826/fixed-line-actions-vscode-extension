@@ -9,6 +9,7 @@ function activate(context: vscode.ExtensionContext) {
     ["lineFix.moveLinesDown", "editor.action.moveLinesDownAction"],
     ["lineFix.indentLines", "editor.action.indentLines"],
     ["lineFix.outdentLines", "editor.action.outdentLines"],
+    ["lineFix.commentLine", "editor.action.commentLine"],
   ]
 
   for (const [cmd, action] of commands) {
