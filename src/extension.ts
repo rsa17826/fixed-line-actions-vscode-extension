@@ -18,8 +18,6 @@ function activate(context: vscode.ExtensionContext) {
         const editor = vscode.window.activeTextEditor
         if (!editor) return
 
-        // Mutating editor.selections does NOT create an undo stop (no text edit),
-        // so the subsequent action remains a single undo step.
         editor.selections = editor.selections.map(
           (sel: vscode.Selection) => {
             // If a selection ends exactly at col 0 of a line below the start,
@@ -37,7 +35,6 @@ function activate(context: vscode.ExtensionContext) {
             return sel
           },
         )
-
         return vscode.commands.executeCommand(action)
       }),
     )
