@@ -18,24 +18,26 @@ function activate(context: vscode.ExtensionContext) {
         const editor = vscode.window.activeTextEditor
         if (!editor) return
 
-        editor.selections = editor.selections.map(
-          (sel: vscode.Selection) => {
-            // If a selection ends exactly at col 0 of a line below the start,
-            // that line is treated as un-selected by VS Code's line commands.
-            // Extend the end to the last char of that line to include it.
-            if (!sel.isEmpty && sel.end.character === 0) {
-              const endLine = sel.end.line
-              const endChar =
-                editor.document.lineAt(endLine).text.length
-              return new vscode.Selection(
-                sel.start,
-                new vscode.Position(endLine, endChar),
-              )
+        editor.edit((editBuilder) => {
+          for (const sel of editor.selections) {
+            const endLine = sel.end.line
+            const endChar =
+              editor.document.lineAt(endLine).text.length
+            // Delete up to the end of that empty/hidden line
+            switch (cmd) {
+              case "lineFix.deleteLines":
+                editBuilder.delete(
+                  new vscode.Range(sel.start.line, 0, endLine + 1, 0),
+                )
+                break
+              // case "lineFix.copyLinesUp":
+              //   passx
+              default:
+                console.error("no action for ", cmd)
             }
-            return sel
-          },
-        )
-        return vscode.commands.executeCommand(action)
+          }
+        })
+        // return vscode.commands.executeCommand(action)
       }),
     )
   }
