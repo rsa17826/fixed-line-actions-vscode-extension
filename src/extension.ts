@@ -35,6 +35,31 @@ function activate(context: vscode.ExtensionContext) {
           return vscode.commands.executeCommand(action)
         }
         var temp: Selection[]
+        switch (cmd) {
+          // TODO make these work correctly
+          case "lineFix.copyLinesUp":
+          case "lineFix.copyLinesDown":
+          case "lineFix.moveLinesUp":
+          case "lineFix.moveLinesDown":
+            editor.selections = editor.selections.map(
+              (sel: vscode.Selection) => {
+                // If a selection ends exactly at col 0 of a line below the start,
+                // that line is treated as un-selected by VS Code's line commands.
+                // Extend the end to the last char of that line to include it.
+                if (!sel.isEmpty && sel.end.character === 0) {
+                  const endLine = sel.end.line
+                  const endChar =
+                    editor.document.lineAt(endLine).text.length
+                  return new vscode.Selection(
+                    sel.start,
+                    new vscode.Position(endLine, endChar),
+                  )
+                }
+                return sel
+              },
+            )
+            return vscode.commands.executeCommand(action)
+        }
         editor
           .edit((eb) => {
             // @ts-ignore
@@ -73,52 +98,61 @@ function activate(context: vscode.ExtensionContext) {
                 }
 
                 case "lineFix.copyLinesUp": {
-                  const text = doc.getText(
-                    new vscode.Range(startLine, 0, endLine, endLen),
-                  )
-                  eb.insert(
-                    new vscode.Position(startLine, 0),
-                    text + "\n",
-                  )
-                  return sel
-                  // var d = startLine - endLine + 1
-                  // sel.isReversed ?
-                  //   new Selection(
-                  //     sel.end.translate(d, 0),
-                  //     sel.start.translate(d, 0),
+                  // if (endLen === 0)
+                  eb.insert(new vscode.Position(endLine, 0), "\n")
+                  return
+                  //   const text = doc.getText(
+                  //     new vscode.Range(startLine, 0, endLine, endLen),
                   //   )
-                  // : new Selection(
-                  //     sel.start.translate(d, 0),
-                  //     sel.end.translate(d, 0),
+                  //   eb.insert(
+                  //     new vscode.Position(startLine, 0),
+                  //     text + "\n",
                   //   )
+                  //   return sel
+                  //   // var d = startLine - endLine + 1
+                  //   // sel.isReversed ?
+                  //   //   new Selection(
+                  //   //     sel.end.translate(d, 0),
+                  //   //     sel.start.translate(d, 0),
+                  //   //   )
+                  //   // : new Selection(
+                  //   //     sel.start.translate(d, 0),
+                  //   //     sel.end.translate(d, 0),
+                  //   //   )
                 }
 
                 case "lineFix.copyLinesDown": {
-                  const text = doc.getText(
-                    new vscode.Range(startLine, 0, endLine, endLen),
+                  // if (endLen === 0)
+                  eb.insert(
+                    new vscode.Position(endLine, 0),
+                    "\nasd\n",
                   )
-                  if (endLine + 1 < doc.lineCount) {
-                    eb.insert(
-                      new vscode.Position(endLine + 1, 0),
-                      text + "\n",
-                    )
-                  } else {
-                    // No line below: append after end of last line
-                    eb.insert(
-                      new vscode.Position(endLine, endLen),
-                      "\n" + text,
-                    )
-                  }
-                  var d = Math.abs(startLine - endLine) + 1
-                  return sel.isReversed ?
-                      new Selection(
-                        sel.end.translate(d, 0),
-                        sel.start.translate(d, 0),
-                      )
-                    : new Selection(
-                        sel.start.translate(d, 0),
-                        sel.end.translate(d, 0),
-                      )
+                  return
+                  //   const text = doc.getText(
+                  //     new vscode.Range(startLine, 0, endLine, endLen),
+                  //   )
+                  //   if (endLine + 1 < doc.lineCount) {
+                  //     eb.insert(
+                  //       new vscode.Position(endLine + 1, 0),
+                  //       text + "\n",
+                  //     )
+                  //   } else {
+                  //     // No line below: append after end of last line
+                  //     eb.insert(
+                  //       new vscode.Position(endLine, endLen),
+                  //       "\n" + text,
+                  //     )
+                  //   }
+                  //   var d = Math.abs(startLine - endLine) + 1
+                  //   return sel.isReversed ?
+                  //       new Selection(
+                  //         sel.end.translate(d, 0),
+                  //         sel.start.translate(d, 0),
+                  //       )
+                  //     : new Selection(
+                  //         sel.start.translate(d, 0),
+                  //         sel.end.translate(d, 0),
+                  //       )
                 }
 
                 case "lineFix.moveLinesUp": {
